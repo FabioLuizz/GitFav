@@ -17,17 +17,16 @@ export class Favorite {
 
   async add(username) {
     try {
-
-      const userExist = this.users.find(user => user.login === username)
-
-      if (userExist) {
-        throw new Error('Usúario já cadastrado')
-      }
-
       const user = await GithubUsers.search(username)
 
       if (user.login === undefined) {
         throw new Error('Usúario não encontrado!')
+      }
+
+      const userExist = this.users.find(person => person.login === user.login)
+
+      if (userExist) {
+        throw new Error('Usuário ja cadastrado!')
       }
 
       this.users = [user, ...this.users]
@@ -60,21 +59,19 @@ export class FavoriteView extends Favorite {
   }
 
   addUser() {
-
     const userSearch = this.root.querySelector('.search button')
     const inputSearch = this.root.querySelector('#input-search')
 
-    inputSearch.onkeypress = (keyPressed) => {
-
-      if(keyPressed.key === 'Enter' || userSearch.click === 'onclick'){
-        const {value} = this.root.querySelector('#input-search')
+    inputSearch.onkeypress = keyPressed => {
+      if (keyPressed.key === 'Enter' || userSearch.click === 'onclick') {
+        const { value } = this.root.querySelector('#input-search')
 
         this.add(value)
       }
     }
 
     userSearch.onclick = () => {
-      const {value} = this.root.querySelector('#input-search')
+      const { value } = this.root.querySelector('#input-search')
 
       this.add(value)
     }
@@ -103,7 +100,7 @@ export class FavoriteView extends Favorite {
           this.delete(user)
         }
 
-        if(this.users.length === 0) {
+        if (this.users.length === 0) {
           this.root.querySelector('.noFav').classList.remove('hide')
         }
       }
@@ -137,8 +134,7 @@ export class FavoriteView extends Favorite {
   }
 
   removeAllTr() {
-
-    if(this.users.length !== 0){
+    if (this.users.length !== 0) {
       this.root.querySelector('.noFav').classList.add('hide')
     }
 
